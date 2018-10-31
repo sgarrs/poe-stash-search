@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --env development",
-    "build": "webpack --env production"
+    "start": "webpack-dev-server --config ./config/webpack.config.js --env development",
+    "build": "webpack --config ./config/webpack.config.js --env production"
   },
   "keywords": [],
   "author": "Garrett Sanders <sgarrettsanders@gmail.com>",
