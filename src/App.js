@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
+import data from './data.json';
+
+import StashCollector from './StashCollector';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+  }
+
   render() {
     return (
-      <div className="App">
-        <h1>Hello, World!</h1>
-      </div>
+      <StashCollector stashes={data[1]} />
     );
   }
 }
