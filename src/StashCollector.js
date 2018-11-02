@@ -6,6 +6,7 @@ class StashCollector extends Component {
     this.state = {
       leagueOptions: [],
       selectedLeague: '',
+      selectedStashes: [],
     };
   }
 
@@ -20,6 +21,11 @@ class StashCollector extends Component {
     return leagueOptions;
   }
 
+  findLeagueStashes(league) {
+    // filter stashes by league
+    return this.props.stashes.filter((stash) => stash.league === league);
+  }
+
   leagueUpdate(league) {
     this.setState((state) => ({
       selectedLeague: league
@@ -28,14 +34,23 @@ class StashCollector extends Component {
 
   componentDidMount() {
     this.setState((state) => ({
-      leagueOptions: this.findLeagueOptions()
+      leagueOptions: this.findLeagueOptions(),
+      selectedStashes: this.findLeagueStashes(this.state.selectedLeague),
     }));
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.selectedLeague !== prevState.selectedLeague) {
+      this.setState((state) => ({
+        selectedStashes: this.findLeagueStashes(this.state.selectedLeague),
+      }));
+    }
+  }
+
   render() {
-    const publicStashes = this.props.stashes.filter((stash) => stash.public);
+    const leagueKey = "league-";
     const leagueButtons = this.state.leagueOptions.map((option, i) => (
-      <button key={i} league={option} onClick={() => this.leagueUpdate(option)}>{option}</button>));
+      <button key={leagueKey + i} league={option} onClick={() => this.leagueUpdate(option)}>{option}</button>));
 
     return (
       <div>

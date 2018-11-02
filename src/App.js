@@ -12,7 +12,7 @@ class App extends Component {
 
   render() {
     return (
-      <StashCollector stashes={data[1]} />
+      <StashCollector stashes={data[1].filter((stash) => stash.public)} />
     );
   }
 }
