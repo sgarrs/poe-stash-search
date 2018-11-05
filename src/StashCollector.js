@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ItemCollector from './ItemCollector';
 
 class StashCollector extends Component {
   constructor(props) {
@@ -8,6 +9,33 @@ class StashCollector extends Component {
       selectedLeague: '',
       selectedStashes: [],
     };
+  }
+
+  render() {
+    const leagueKey = "league-";
+    const leagueButtons = this.state.leagueOptions.map((option, i) => (
+      <button key={leagueKey + i} league={option} onClick={() => this.leagueUpdate(option)}>{option}</button>));
+
+    return (
+      <div>
+        {leagueButtons}
+        <ItemCollector stashes={this.state.selectedStashes} />
+      </div>
+    )
+  }
+
+  componentDidMount() {
+    this.setState((state) => ({
+      leagueOptions: this.findLeagueOptions()
+    }));
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.selectedLeague !== prevState.selectedLeague) {
+      this.setState((state) => ({
+        selectedStashes: this.findLeagueStashes(this.state.selectedLeague),
+      }));
+    }
   }
 
   findLeagueOptions() {
@@ -30,33 +58,6 @@ class StashCollector extends Component {
     this.setState((state) => ({
       selectedLeague: league
     }));
-  }
-
-  componentDidMount() {
-    this.setState((state) => ({
-      leagueOptions: this.findLeagueOptions(),
-      selectedStashes: this.findLeagueStashes(this.state.selectedLeague),
-    }));
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.selectedLeague !== prevState.selectedLeague) {
-      this.setState((state) => ({
-        selectedStashes: this.findLeagueStashes(this.state.selectedLeague),
-      }));
-    }
-  }
-
-  render() {
-    const leagueKey = "league-";
-    const leagueButtons = this.state.leagueOptions.map((option, i) => (
-      <button key={leagueKey + i} league={option} onClick={() => this.leagueUpdate(option)}>{option}</button>));
-
-    return (
-      <div>
-        {leagueButtons}
-      </div>
-    )
   }
 }
 
