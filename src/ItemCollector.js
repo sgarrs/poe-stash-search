@@ -7,22 +7,27 @@ class ItemCollector extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: []
+      items: [],
+      searchResults: []
     };
   }
 
   render() {
 //    const test = this.state.items.filter((item) => item.category === 'weapons');
 //    console.log(test);
-    const searchResult = this.search({
-        buyout: '1.8 exa'
-      }, this.state.items);
-    console.log(searchResult);
+//    const searchResult = this.search({
+//        subCategory: 'boots'
+//      }, this.state.items);
+//    console.log(searchResult);
 //    const props = test !== undefined
 //      ? test.properties.map((prop) => <li>{prop.name}</li>)
 //      : 'props';
+    const searchObj = {
+      subCategory: 'boots'
+    };
+
     return (
-      <ul>test</ul>
+      <button onClick={() => this.search(searchObj, this.state.items)}>Search</button>
     )
   }
 
@@ -42,7 +47,7 @@ class ItemCollector extends Component {
 
   search(searchObj, items) {
     const searchKeys = Object.keys(searchObj);
-    return items.filter((item) => {
+    const searchResults = items.filter((item) => {
       let result = true;
       for (let key of searchKeys) {
         switch (key) {
@@ -119,6 +124,10 @@ class ItemCollector extends Component {
       }
       return result;
     });
+
+    this.setState((state) => ({
+      searchResults: searchResults
+    }));
   }
 
   getStashItems(stashArray) {
