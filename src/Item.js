@@ -1,46 +1,45 @@
 import _ from 'lodash';
-//const request = require('request');
 
 class Item {
-  constructor(data, id) {
-  // general
-    //    this.icon = Item.getItemImage(data.icon);
-    this.league = data.league; // do I need this?
+  constructor (item) {
+    this.fullItem = item;
+    this.accountName = item.accountName ? item.accountName : '';
+    this.lastCharacterName = item.lastCharacterName ? item.lastCharacterName : '';
+    this.note = item.note ? item.note : '';
+    this.stash = item.stash ? item.stash : '';
+    this.inventoryId = item.inventoryId ? item.inventoryId : '';
+    this.buyout = Item.getBuyout(this.stash, this.note);
+    this.verified = item.verified ? item.verified : false;
+    this.x = item.x ? item.x : undefined;
+    this.y = item.y ? item.y : undefined;
+    this.w = item.w ? item.w : undefined;
+    this.h = item.h ? item.h : undefined;
 
-    this.name = Item.cleanMarkup(data.name);
-    this.typeLine = Item.cleanMarkup(data.typeLine);
+    this.name = Item.cleanMarkup(item.name);
+    this.typeLine = Item.cleanMarkup(item.typeLine);
+    this.flavourText = Item.cleanMarkup(item.flavourText);
 
-    this.category = Object.getOwnPropertyNames(data.category).join();
-    this.subCategory = Object.values(data.category)[0];
-    this.ilvl = data.ilvl;
+    this.isCorrupted = item.corrupted ? true : false;
+    this.isIdentified = item.identified ? true : false;
+    this.isElder = item.elder ? true : false;
+    this.isShaper = item.shaper ? true : false;
+    this.isRelic = item.isRelic ? true : false;
+    this.isSupport = item.support ? true : false;
 
-    this.identified = Boolean(data.identified);
-    this.corrupted = Boolean(data.corrupted);
-    this.elder = Boolean(data.elder);
-    this.shaper = Boolean(data.shaper);
-    this.isRelic = Boolean(data.isRelic);
-    this.support = Boolean(data.support);
-  // item props & mods
-    // frameType
-      // 0 normal
-      // 1 magic
-      // 2 rare
-      // 3 unique
-      // 4 gem
-      // 5 currency
-      // 6 div card
-      // 7 quest item
-      // 8 prophecy
-      // 9 relic
-    this.frameType = Number(data.frameType);
+    this.frameType = item.frameType ? item.frameType : undefined;
+    this.category = item.category ? Object.getOwnPropertyNames(item.category).join() : undefined;
+    this.subCategory = item.category ? Object.values(item.category)[0].join() : undefined;
+    this.ilvl = item.ilvl ? item.ilvl : 0;
+    this.talismanTier = item.talismanTier ? item.talismanTier : 0;
 
-    this.requirements = [].concat(data.requirements);
-    this.reqLvl = Number(this.getRequirementValue('Level'));
-    this.reqStr = Number(this.getRequirementValue('Str'));
-    this.reqInt = Number(this.getRequirementValue('Int'));
-    this.reqDex = Number(this.getRequirementValue('Dex'));
+    this.requirements = item.requirements ? item.requirements : [];
+    this.reqLvl = this.getRequirementValue('Level');
+    this.reqStr = this.getRequirementValue('Str');
+    this.reqInt = this.getRequirementValue('Int');
+    this.reqDex = this.getRequirementValue('Dex');
 
-    this.properties = [].concat(Item.addQuality(data.properties));
+    this.properties = item.properties ? item.properties : [];
+
     this.damagePhys = this.getPropertyValue(9)
     this.damageChaos = this.getPropertyValue(11);
     this.damageFire = this.getElementalDamage(4);
@@ -48,58 +47,52 @@ class Item {
     this.damageLightning = this.getElementalDamage(6);
     this.damageElemental = this.getDamage(true);
     this.damage = this.getDamage();
+
+    this.damagePhysMin = Item.getDamageMinMax(this.damagePhys)[0];
+    this.damagePhysMax = Item.getDamageMinMax(this.damagePhys)[1];
+    this.damageChaosMin = Item.getDamageMinMax(this.damageChaos)[0];
+    this.damageChaosMax = Item.getDamageMinMax(this.damageChaos)[1];
+    this.damageFireMin = Item.getDamageMinMax(this.damageFire)[0];
+    this.damageFireMax = Item.getDamageMinMax(this.damageFire)[1];
+    this.damageColdMin = Item.getDamageMinMax(this.damageCold)[0];
+    this.damageColdMax = Item.getDamageMinMax(this.damageCold)[1];
+    this.damageLightningMin = Item.getDamageMinMax(this.damageLightning)[0];
+    this.damageLightningMax = Item.getDamageMinMax(this.damageLightning)[1];
+    this.damageElementalMin = Item.getDamageMinMax(this.damageElemental)[0];
+    this.damageElementalMax = Item.getDamageMinMax(this.damageElemental)[1];
+    this.damageMin = Item.getDamageMinMax(this.damage)[0];
+    this.damageMax = Item.getDamageMinMax(this.damage)[1];
+
     this.critChance = this.getPropertyValue(12);
     this.aps = this.getPropertyValue(13);
     this.range = this.getPropertyValue(14);
+    this.dps = this.getDps(this.damage);
+    this.pdps = this.getDps(this.damagePhys);
+    this.edps = this.getDps(this.damageElemental);
 
     this.block = this.getPropertyValue(15);
     this.armour = this.getPropertyValue(16);
     this.evasion = this.getPropertyValue(17);
     this.energyShield = this.getPropertyValue(18);
-
-    this.dps = this.getDps(this.damage);
-    this.pdps = this.getDps(this.damagePhys);
-    this.edps = this.getDps(this.damageElemental);
-
-
-    this.modifiers = {
-      implicit: data.implicitMods,
-      explicit: data.explicitMods
-    };
-
-    this.additionalProperties = data.additionalProperties;
-
-    this.socketDetails = data.sockets;
-    this.sockets = [].concat(this.socketDetails).length;
-    this.socketsGreen = Number(this.getSocketColorNumber('G'));
-    this.socketsBlue = Number(this.getSocketColorNumber('B'));
-    this.socketsRed = Number(this.getSocketColorNumber('R'));
-    this.socketsWhite = Number(this.getSocketColorNumber('W'));
-    this.socketsAbyssal = Number(this.getSocketColorNumber('A'));
-    this.socketedItems = (data.socketedItems) ? data.socketedItems : [];
-    this.stackSize = data.stackSize;
-    this.maxStackSize = data.maxStackSize;
-    this.artFilename = data.artFilename;
-
-  // stash info
-    this.inventoryId = data.inventoryId;
-    this.stashId = id;
-    this.id = data.id;
-    this.price = data.note;
-    this.x = data.x;  // x pos in stash
-    this.y = data.y;  // y pos in stash
-    this.w = data.w;  // slot width
-    this.h = data.h;  // slot height
   }
 
   getDps(damage) {
-    const dmg = String(damage);
-    const regex = /-/g;
-    const separator = dmg.search(regex);
-    const dmgMin = dmg.slice(0, separator);
-    const dmgMax = dmg.slice(separator + 1);
-    return ((Number(dmgMin) + Number(dmgMax)) / 2) * Number(this.aps);
-    //return ((Number(dmgMin) + Number(dmgMax) / 2) * Number(this.aps));
+    const range = Item.getDamageMinMax(damage);
+    if (range[0] !== 0 && this.aps) {
+      return ((range[0] + range[1]) / 2) * Number(this.aps);
+    }
+    else return 0;
+  }
+
+  static getDamageMinMax(damage) {
+    if (damage) {
+      const regex = /-/g;
+      const separator = damage.search(regex);
+      const dmgMin = Number(damage.slice(0, separator));
+      const dmgMax = Number(damage.slice(separator + 1));
+      return [dmgMin, dmgMax];
+    }
+    else return [0, 0];
   }
 
   getDamage(eleOnly = false) {
@@ -111,137 +104,76 @@ class Item {
     } else {
       dmgArray = [ this.damagePhys, this.damageFire, this.damageCold, this.damageLightning, this.damageChaos ];
     }
-    dmgArray.forEach((dmg) => {
-      if (dmg) {
-        dmg = String(dmg);
-        const regex = /-/g;
-        const separator = dmg.search(regex);
-        const dmgMin = dmg.slice(0, separator);
-        const dmgMax = dmg.slice(separator + 1);
-        totalMin += Number(dmgMin);
-        totalMax += Number(dmgMax);
+    dmgArray.forEach((damage) => {
+      if (damage) {
+        const range = Item.getDamageMinMax(damage);
+        totalMin += range[0];
+        totalMax += range[1];
       }
     });
 
     if (totalMin && totalMax) {
       return totalMin + '-' + totalMax;
     }
-    else return undefined;
+    else return "";
   }
 
   getElementalDamage(type, arr = this.getPropertyValue(10)) {
     if (arr) {
-      const match = arr.filter((value) => {
-        return value[1] === type;
-      });
-      const matchValue = [].concat(match[0]);
-      return matchValue[0];
+      const match = arr.filter((value) => value[1] === type)[0];
+      return match ? match[0] : 0;
     }
+    else return 0;
   }
 
   getPropertyValue(type, arr = this.properties) {
-    const match = arr.filter((prop) => {
-      if (prop !== undefined) {
-        const propObj = Object.assign({}, prop);
-        return propObj.type === type;
+    const match = arr.filter((prop) => prop.type === type)[0];
+    if (match) {
+      const value = match.values;
+      if (match.type === 10) { // if property is 'Quality'
+        return value;
+      } else {
+        const returnValue = _.flatten(value)[0];
+        if (type === 12) {
+          return Number(returnValue.slice('%')[0]);
+        } else {
+          return (type === 13 || type === 14 || type === 16 || type === 17 || type === 18)
+            ? Number(returnValue)
+            : returnValue;
+        }
       }
-    });
-    const matchObj = Object.assign({}, match[0]);
-    const matchValue = [].concat(matchObj.values);
-
-    if (matchObj.type === 10) {
-      return matchValue;
-    } else {
-      return _.flatten(matchValue)[0];
     }
+    else return 0;
   }
 
   getRequirementValue(name, arr = this.requirements) {
-    const match = arr.filter((req) => {
-      const reqObj = Object.assign({}, req);
-      return reqObj.name === name;
-    });
-    // each object/array is missing prototype methods
-    // why???
-    const matchObj = Object.assign({}, match[0]);
-    const matchValue = [].concat(matchObj.values);
-    const value = [].concat(matchValue[0])
-    return value[0];
+    const match = arr.filter((req) => req.name === name);
+    return match.length > 0
+      ? Number(match[0].values[0][0])
+      : 0;
   }
-
-  static generic(mod) {
-    const digitString = /(\d+(\.\d+)?)/;
-    const toString = /\s\d+\s(to)\s\d+\s/;
-
-    const regexArray = [toString, digitString];
-    let matchedRegex = regexArray.filter((r) => r.test(mod))[0];
-
-    switch (matchedRegex) {
-      case toString:
-        return String(mod).replace(toString, ' x to x ');
-      case digitString:
-        return String(mod).replace(digitString, 'x');
-      default:
-        return String(mod);
-    }
-  }
-
-  static addQuality(props) {
-    const qualityProp = {
-      name: 'Quality ',
-      values: [ [ '0%', 1 ] ],
-      displayMode: 0,
-      type: 6
-    };
-
-    // is quality prop always at index 1?
-    if (props && props.length > 1 && props[1].name === 'Quality') {
-      return props;
-    } else if (props && props.length > 1) {
-      return [props[0], qualityProp].concat(props.slice(1));
-    }
-  };
 
   // clean item name from markup prefix
   static cleanMarkup(text) {
     const matchMarkup = /^[\w\d<>:]+>>/;
-
     if (matchMarkup.test(text)) {
       return text.replace(matchMarkup, '');
     }
-
     return text;
   }
 
-  // return image data from href to poe cdn
-  static getItemImage(uri) {
-    return request.get(uri, (err, res, body) => {
-      if (!err && res.statusCode === 200) {
-        return "data:" +
-          res.headers["content-type"] +
-          ";base64," +
-          new Buffer(body).toString('base64');
-      }
-    });
-  }
-
-  static getGemExpPercent(addProps) {
-    const [cur, max] = (addProps && addProps[0] && addProps[0].name === 'Experience')
-      ? addProps[0].values[0][0].split('/')
-      : '';
-    return cur / max;
-  }
-
-  getSocketColorNumber(color, details = this.socketDetails) {
-    // this.socketDetails is initially non-iterable
-    details = [].concat(details).map((obj) => new Object(obj));
-    let count = 0;
-    for (let i = 0; i < details.length; i++) {
-      if (details[i].sColour === color)
-        count++;
+  static getBuyout(stash, note) {
+    const str = '~b/o'
+    const stashIndex = stash.indexOf(str);
+    const noteIndex = note.indexOf(str);
+    if (noteIndex > -1) {
+      return note.slice(noteIndex + 5); // 5 = string length of '~b/o '
+    } else if (stashIndex > -1) {
+      return stash.slice(stashIndex + 5); // 5 = string length of '~b/o '
     }
-    return count;
+    else return 'no buyout';
   }
-};
+
+}
 
 export default Item;

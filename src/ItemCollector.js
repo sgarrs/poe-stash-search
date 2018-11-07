@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 //import Item from './Item';
-import Item from './testItem';
+import Item from './Item';
 
 class ItemCollector extends Component {
   constructor(props) {
@@ -14,7 +14,9 @@ class ItemCollector extends Component {
   render() {
 //    const test = this.state.items.filter((item) => item.category === 'weapons');
 //    console.log(test);
-    const searchResult = this.search({subCategory: 'chest', typeLine: 'Astral Plate', frameType: 3}, this.state.items);
+    const searchResult = this.search({
+        buyout: '1.8 exa'
+      }, this.state.items);
     console.log(searchResult);
 //    const props = test !== undefined
 //      ? test.properties.map((prop) => <li>{prop.name}</li>)
@@ -60,19 +62,53 @@ class ItemCollector extends Component {
           case 'reqStr':
           case 'reqDex':
           case 'reqInt':
+          case 'stash':
+          case 'verified':
+          case 'note':
+          case 'stash':
+          case 'buyout':
             if (searchObj[key] !== item[key]) {
               result = false;
               break;
             }
             break;
+
+          case 'damagePhysMin':
+          case 'damagePhysMax':
+          case 'damageChaosMin':
+          case 'damageChaosMax':
+          case 'damageFireMin':
+          case 'damageFireMax':
+          case 'damageColdMin':
+          case 'damageColdMax':
+          case 'damageLightningMin':
+          case 'damageLightningMax':
+          case 'damageElementalMin':
+          case 'damageElementalMax':
+          case 'damageMin':
+          case 'damageMax':
           case 'aps':
           case 'dps':
+          case 'pdps':
+          case 'edps':
           case 'critChance':
-            if (searchObj[key][0] > item[key] || searchObj[key][1] < item[key]) {
+          case 'block':
+          case 'armour':
+          case 'evasion':
+          case 'energyShield':
+            // ! need to account for searchObj min/max value to be undefined
+            if (!searchObj[key][0] && searchObj[key][1]) {
+              result = searchObj[key][1] < item[key] ? false : true;
+              break;
+            } else if (searchObj[key][0] && !searchObj[key][1]) {
+              result = searchObj[key][0] > item[key] ? false : true;
+              break;
+            } else if (searchObj[key][0] > item[key] || searchObj[key][1] < item[key]) {
               result = false;
               break;
             }
             break;
+
           default:
             if (searchObj[key] > item[key]) {
               result = false;
@@ -87,8 +123,16 @@ class ItemCollector extends Component {
 
   getStashItems(stashArray) {
     const items = _.flatten(stashArray.map((stash) =>
-      stash.items.map((item) =>
-        Object.assign(item, {accountName: stash.accountName, lastCharacterName: stash.lastCharacterName}))));
+      stash.items.map((item) => {
+        return Object.assign(item,
+          {
+            accountName: stash.accountName,
+            lastCharacterName: stash.lastCharacterName,
+            stash: stash.stash
+          }
+        )
+      })
+    ));
     return items.map((item) => new Item(item));
   }
 }
