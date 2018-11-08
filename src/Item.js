@@ -8,7 +8,7 @@ class Item {
     this.note = item.note ? item.note : '';
     this.stash = item.stash ? item.stash : '';
     this.inventoryId = item.inventoryId ? item.inventoryId : '';
-    this.buyout = Item.getBuyout(this.stash, this.note);
+    this.price = Item.getPrice(this.stash, this.note);
     this.verified = item.verified ? item.verified : false;
     this.x = item.x ? item.x : undefined;
     this.y = item.y ? item.y : undefined;
@@ -162,16 +162,22 @@ class Item {
     return text;
   }
 
-  static getBuyout(stash, note) {
-    const str = '~b/o'
-    const stashIndex = stash.indexOf(str);
-    const noteIndex = note.indexOf(str);
-    if (noteIndex > -1) {
-      return note.slice(noteIndex + 5); // 5 = string length of '~b/o '
-    } else if (stashIndex > -1) {
-      return stash.slice(stashIndex + 5); // 5 = string length of '~b/o '
-    }
-    else return 'no buyout';
+  static getPrice(stash, note) {
+    const buyoutStr = '~b/o'
+    const priceStr = '~price'
+    const buyoutStash = stash.indexOf(buyoutStr);
+    const buyoutNote = note.indexOf(buyoutStr);
+    const priceStash = stash.indexOf(priceStr);
+    const priceNote = note.indexOf(priceStr);
+    if (buyoutNote > -1) {
+      return note.slice(buyoutNote + 5); // 5 = string length of '~b/o '
+    } else if (buyoutStash > -1) {
+      return stash.slice(buyoutStash + 5); // 5 = string length of '~b/o '
+    } else if (priceNote > -1) {
+      return note.slice(priceNote + 7); // 7 = string length of '~price '
+    } else if (priceStash > -1) {
+      return stash.slice(priceStash + 7); // 7 = string length of '~price '
+    } else return 'no price';
   }
 
 }

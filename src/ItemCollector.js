@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 //import Item from './Item';
 import Item from './Item';
+import SearchResults from './SearchResults';
 
 class ItemCollector extends Component {
   constructor(props) {
@@ -23,11 +24,15 @@ class ItemCollector extends Component {
 //      ? test.properties.map((prop) => <li>{prop.name}</li>)
 //      : 'props';
     const searchObj = {
-      subCategory: 'boots'
+      subCategory: 'chest',
+      frameType: 3
     };
 
     return (
-      <button onClick={() => this.search(searchObj, this.state.items)}>Search</button>
+      <div>
+        <button onClick={() => this.search(searchObj, this.state.items)}>Search</button>
+        <SearchResults itemResults={this.state.searchResults} />
+      </div>
     )
   }
 
