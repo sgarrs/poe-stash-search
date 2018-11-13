@@ -14,6 +14,7 @@ class Item {
     this.y = item.y ? item.y : undefined;
     this.w = item.w ? item.w : undefined;
     this.h = item.h ? item.h : undefined;
+    this.icon = item.icon ? item.icon : undefined
 
     this.name = Item.cleanMarkup(item.name);
     this.typeLine = Item.cleanMarkup(item.typeLine);
@@ -79,7 +80,7 @@ class Item {
   getDps(damage) {
     const range = Item.getDamageMinMax(damage);
     if (range[0] !== 0 && this.aps) {
-      return ((range[0] + range[1]) / 2) * Number(this.aps);
+      return (((range[0] + range[1]) / 2) * Number(this.aps)).toFixed(2);
     }
     else return 0;
   }

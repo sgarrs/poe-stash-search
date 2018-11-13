@@ -12,6 +12,11 @@ module.exports = {
         loader: 'babel-loader',
         options: { presets: ['@babel/env'] }
       },
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        loader: ['style-loader', 'css-loader', 'sass-loader']
+      }
     ]
   },
   resolve: { extensions: ['*', '.js', '.jsx'] },

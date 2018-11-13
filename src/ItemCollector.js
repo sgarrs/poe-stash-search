@@ -24,8 +24,9 @@ class ItemCollector extends Component {
 //      ? test.properties.map((prop) => <li>{prop.name}</li>)
 //      : 'props';
     const searchObj = {
-      subCategory: 'chest',
-      frameType: 3
+      category: 'accessories',
+      subCategory: 'ring',
+      frameType: 2
     };
 
     return (

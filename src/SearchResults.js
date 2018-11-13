@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ItemCard from './ItemCard';
+import './SearchResults.scss';
 
 class SearchResults extends Component {
   constructor(props) {
@@ -13,9 +14,9 @@ class SearchResults extends Component {
     const itemKey = 'ItemCard-';
     const itemResults = this.props.itemResults.map((item, i) => <ItemCard key={itemKey + i} item={item} />);
     return (
-      <ul>
+      <div className='search-results'>
         {itemResults}
-      </ul>
+      </div>
     );
   }
 }
