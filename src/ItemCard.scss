@@ -4,107 +4,23 @@ $rare: rgb(255, 255, 119);
 $unique: rgb(175, 96, 37);
 
 .item-card {
+  font-family: Fontin SmallCaps;
+  text-align: center;
   width: 50%;
-  border: 1px solid black;
   box-sizing: border-box;
-  color: white;
-  background: hsla(0, 0, 0, .3);
-  font-family: Verdana, Helvetica, sans-serif;
-}
+  padding: 1rem;
+  border: 1px solid black;
 
-.item-card__body {
-  display: flex;
-  .item-card__image, .item-card__data {
-    width: 50%;
-    text-align: center;
+  ul {
+    padding-left: 0;
+    list-style-type: none;
   }
 }
 
 .item-card__header {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-
-  .item-card__header--left, .item-card__header--right {
-    background-repeat: no-repeat;
-    width: 8%;
-    height: 54px;
-  }
-
-  .item-card__header--left {
-    background-position: left;
-  }
-
-  .item-card__header--right {
-    background-position: right;
-  }
-}
-
-ul,li {
-  list-style-type: none;
-  padding: 0;
-}
-
-%item-card__name {
-  background-size: auto;
-  background-attachment: scroll;
-  text-align: center;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 54px;
-
-
   h3, h4 {
-    font-size: 1.2rem;
+    font-weight: 300;
+    line-height: 1;
     margin: 0;
   }
-  h3 { margin-top: .2rem; }
-}
-
-#single {
-  height: 34px;
-}
-
-.item-card__name--normal {
-  background-image: url('http://web.poecdn.com/image/Art/2DArt/UIImages/InGame/ItemsHeaderWhiteMiddle.png?scale=1&v=800c88925978db435f458f4fb19c8830&scaleIndex=0');
-  @extend %item-card__name;
-  color: $normal;
-}
-
-.item-card__name--magic {
-  background-image: url('http://web.poecdn.com/image/Art/2DArt/UIImages/InGame/ItemsHeaderMagicMiddle.png?scale=1&v=f1b14ee55eec3fdea97d5eef52dfd612&scaleIndex=0');
-  @extend %item-card__name;
-  color: $magic;
-}
-
-.item-card__name--rare {
-  background-image: url('http://web.poecdn.com/image/Art/2DArt/UIImages/InGame/ItemsHeaderRareMiddle.png?scale=1&v=2a9bc46046532795600f120446dafb6c&scaleIndex=0');
-  @extend %item-card__name;
-  color: $rare;
-}
-
-.item-card__name--unique {
-  background: url('http://web.poecdn.com/image/Art/2DArt/UIImages/InGame/ItemsHeaderUniqueMiddle.png?scale=1&v=c992ff3d42f93942a86a165cb7dbba90&scaleIndex=0');
-  @extend %item-card__name;
-  color: $unique;
-}
-
-.item-card__requirements {
-  display: flex;
-  flex-direction: row;
-
-  li {
-    padding: 0 5px;
-  }
-}
-
-.item-card__image {
-}
-
-.item-card__data {
-  display: flex;
 }

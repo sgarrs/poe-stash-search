@@ -75,6 +75,9 @@ class Item {
     this.armour = this.getPropertyValue(16);
     this.evasion = this.getPropertyValue(17);
     this.energyShield = this.getPropertyValue(18);
+
+    this.implicitMods = item.implicitMods ? item.implicitMods : [];
+    this.explicitMods = item.explicitMods ? item.explicitMods : [];
   }
 
   getDps(damage) {
