@@ -18,7 +18,8 @@ class Item {
 
     this.name = Item.cleanMarkup(item.name);
     this.typeLine = Item.cleanMarkup(item.typeLine);
-    this.flavourText = Item.cleanMarkup(item.flavourText);
+    this.flavourText = item.flavourText ? item.flavourText : [];
+//    this.flavourText = Item.cleanMarkup(item.flavourText);
 
     this.isCorrupted = item.corrupted ? true : false;
     this.isIdentified = item.identified ? true : false;

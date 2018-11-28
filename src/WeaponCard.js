@@ -36,6 +36,8 @@ class WeaponCard extends Component {
       )
       : '';
 
+    const flavourText = <ul className='item-card__flavourText'>{item.flavourText.map((line, i) => <li key={'flavourTextLine-' + i}>{line}</li>)}</ul>;
+
     return (
       <div className='item-card__body'>
         <ul className='item-card__properties'>
@@ -57,7 +59,7 @@ class WeaponCard extends Component {
           {item.isIdentified ? '' : 'Unidentified'}
         </div>
         <hr />
-        <p className='item-card__flavourText'>{item.flavourText}</p>
+        {item.flavourText.length > 0 ? flavourText : ''}
         <div className='item-card__image'>
           <img src={item.icon} />
         </div>
