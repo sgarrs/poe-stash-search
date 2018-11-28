@@ -1,0 +1,11 @@
+$physical: #8888FF;
+$fire: #960000;
+$cold: #366492;
+$lightning: gold;
+$chaos: #d02090;
+
+.damage__type--physical { color: $physical; }
+.damage__type--fire { color: $fire; }
+.damage__type--cold { color: $cold; }
+.damage__type--lightning { color: $lightning; }
+.damage__type--chaos { color: $chaos; }
