@@ -25,7 +25,7 @@ class ItemCollector extends Component {
 //      : 'props';
     const searchObj = {
       subCategory: 'onesword',
-      edps: [100]
+      frameType: 3
     };
 
     return (

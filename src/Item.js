@@ -19,7 +19,6 @@ class Item {
     this.name = Item.cleanMarkup(item.name);
     this.typeLine = Item.cleanMarkup(item.typeLine);
     this.flavourText = item.flavourText ? item.flavourText : [];
-//    this.flavourText = Item.cleanMarkup(item.flavourText);
 
     this.isCorrupted = item.corrupted ? true : false;
     this.isIdentified = item.identified ? true : false;
@@ -41,6 +40,8 @@ class Item {
     this.reqDex = this.getRequirementValue('Dex');
 
     this.properties = item.properties ? item.properties : [];
+
+    this.quality = this.getPropertyValue(10)
 
     this.damagePhys = this.getPropertyValue(9)
     this.damageChaos = this.getPropertyValue(11);

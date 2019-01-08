@@ -12,6 +12,35 @@ class WeaponCard extends Component {
     // need to convert this to jsx to bold the number values
 
     /* Properties */
+    const subCategory = (category) => {
+      switch (category) {
+        case 'bow':
+          return 'Bow';
+        case 'claw':
+          return 'Claw';
+        case 'dagger':
+          return 'Dagger';
+        case 'oneaxe':
+          return 'One Handed Axe';
+        case 'onemace':
+          return 'One Handed Mace';
+        case 'onesword':
+          return 'One Handed Sword';
+        case 'sceptre':
+          return 'Sceptre';
+        case 'staff':
+          return 'Staff';
+        case 'twoaxe':
+          return 'Two Handed Axe';
+        case 'twomace':
+          return 'Two Handed Mace';
+        case 'twosword':
+          return 'Two Handed Sword';
+        case 'wand':
+          return 'Wand';
+      }
+    }
+
     const damagePhys = <li>Physical Damage: <span className='damage__type--physical'><b>{item.damagePhys}</b></span></li>;
     const damageElemental = <li>Elemental Damage: {WeaponCard.getElementalDamageMarkup(item)}</li>;
     const damageChaos = <li>Chaos Damage: <span className='damage__type--chaos'><b>{item.damageChaos}</b></span></li>;
@@ -41,7 +70,7 @@ class WeaponCard extends Component {
     return (
       <div className='item-card__body'>
         <ul className='item-card__properties'>
-          <li>{item.subCategory}</li>
+          <li>{subCategory(item.subCategory)}</li>
           <li>{item.quality}</li>
           {item.damagePhys ? damagePhys : ''}
           {item.damageFire || item.damageCold || item.damageLightning ? damageElemental : ''}

@@ -1,4 +1,2 @@
 - modifier tiers
 - socket display
-- fix flavourText
-- does base crit chance on weapons need to factor in explicit mod crit chance on the item card?
