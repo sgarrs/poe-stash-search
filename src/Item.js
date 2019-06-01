@@ -136,7 +136,7 @@ class Item {
     const match = arr.filter((prop) => prop.type === type)[0];
     if (match) {
       const value = match.values;
-      if (match.type === 10) { // if property is 'Quality'
+      if (match.type === 10) { // if property is elemental dmg return array
         return value;
       } else {
         const returnValue = _.flatten(value)[0];

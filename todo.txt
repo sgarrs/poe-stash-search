@@ -1,2 +1,4 @@
 - modifier tiers
 - socket display
+- componentize item card categories (weapons, armor, flasks, jewels, maps, etc.)
+- use proper item category names on item card
